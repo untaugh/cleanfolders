@@ -1,0 +1,18 @@
+If the folder to be cleaned is empty, then simple remove the folder.
+If the folder contains items, move to the trash directory.
+If the folder already exists in the trash directory, then append filename with digits.
+
+---
+Hidden files are ignored for now.
+
+"keep:
+Code
+Pictures"
+This would mean the folders remain as they are.
+
+"clean:
+Desktop
+Downloads"
+This would mean the folders remain, but everything in them is moved to trash.
+
+Folders and files not mentioned are moved to trash. Trash folder is kept even if not mentioned.
