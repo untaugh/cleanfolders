@@ -1,0 +1,11 @@
+clean:
+Desktop/*
+
+keep:
+Code
+Bilder
+Documents
+Downloads
+Musik
+src
+Desktop
