@@ -34,6 +34,12 @@ class TestFunctions(unittest.TestCase):
             for f in files:
                 p = Path(testdir + '/' + d + '/' + f)
                 p.touch()
+        p = Path(testdir + '/file01.jpg')
+        p.touch()
+        p = Path(testdir + '/file02.jpg')
+        p.touch()
+        p = Path(testdir + '/.hidden.jpg')
+        p.touch()
         # set directories in cleanfolders
         self.cf.basedir = testdir
         self.cf.trashdir = trashdir
@@ -173,6 +179,34 @@ class TestFunctions(unittest.TestCase):
         self.assertFalse(Path(self.cf.basedir + '/Test3') in list)
         self.assertTrue(Path(self.cf.basedir + '/Test1') in list)
 
+    def test_move_dir(self):
+        self.cf.trash_dir(self.cf.basedir + '/Test2')
+        self.assertFalse(os.path.exists(self.cf.basedir + '/Test2'))
+        self.assertTrue(os.path.exists(self.cf.trashdir + '/Test2'))
+        self.makedir(self.cf.basedir + '/Test2')
+        self.cf.trash_dir(self.cf.basedir + '/Test2')
+        self.assertTrue(os.path.exists(self.cf.trashdir + '/Test2_0'))
+
+    def test_list_files(self):
+        settings = 'clean:\nTest1\nkeep:\nTest2'
+        ret = self.cf.parse_file(settings.splitlines())
+        list = self.cf.list_files(ret)
+        self.assertTrue(Path(self.cf.basedir + '/file01.jpg') in list)
+
+    def test_trash_file(self):
+        files = [Path(self.cf.basedir + '/file01.jpg'), Path(self.cf.basedir + '/file02.jpg')]
+        self.cf.trash_files(files)
+        self.assertTrue(os.path.exists(self.cf.trashdir + '/Base/file01.jpg'))
+        self.assertTrue(os.path.exists(self.cf.trashdir + '/Base/file02.jpg'))
+        self.assertFalse(os.path.exists(self.cf.basedir + '/file01.jpg'))
+
+    def test_move_files(self):
+        settings = ''
+        ret = self.cf.parse_file(settings.splitlines())
+        self.cf.process_dirs(ret)
+        self.assertTrue(os.path.exists(self.cf.trashdir + '/Base/file01.jpg'))
+        self.assertTrue(os.path.exists(self.cf.basedir + '/.hidden.jpg'))
+        self.assertFalse(os.path.exists(self.cf.basedir + '/file01.jpg'))
 
 if __name__ == '__main__':
     unittest.main()
